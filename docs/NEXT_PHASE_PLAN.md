@@ -99,6 +99,14 @@ Week 3:
 Week 4:
 - metrics dashboard widgets + docs + demo script
 
+## 8) Current status
+
+- Streamlit dashboard scaffold exists and is connected to the backend APIs
+- pipeline dataset store exists
+- evaluation runner worker exists
+- release readiness endpoint exists
+
+
 ## 7) Definition of Done for next milestone
 
 - UI supports create/review/evaluate/release end-to-end

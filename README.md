@@ -10,6 +10,7 @@ Current product direction:
 - [PRODUCT_BRIEF.md](PRODUCT_BRIEF.md) explains the business problem, target users, and phased roadmap.
 - [docs/NEXT_PHASE_PLAN.md](docs/NEXT_PHASE_PLAN.md) defines the next execution milestone (UI screens, data/AI jobs, and automation).
 - [docs/UI.md](docs/UI.md) shows how to run and understand the Streamlit dashboard.
+- [docs/PIPELINE.md](docs/PIPELINE.md) explains dataset ingestion, evaluation automation, and release readiness checks.
 - [workflows/README.md](workflows/README.md) starts the first operational workflow: prompt approval.
 
 Diagram:

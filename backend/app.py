@@ -7,12 +7,14 @@ import time
 from urllib.parse import urlparse
 
 try:
-    from . import evaluation_store, workflow_store
+    from . import dataset_store, evaluation_store, pipeline, workflow_store
     from .settings import get_int_setting, get_setting
     from .model_adapter import get_default_adapter
     from .observability import metrics, observe_request
 except ImportError:  # pragma: no cover
+    import dataset_store  # type: ignore[no-redef]
     import evaluation_store  # type: ignore[no-redef]
+    import pipeline  # type: ignore[no-redef]
     import workflow_store  # type: ignore[no-redef]
     from settings import get_int_setting, get_setting  # type: ignore[no-redef]
     from model_adapter import get_default_adapter  # type: ignore[no-redef]
@@ -72,6 +74,11 @@ class Handler(BaseHTTPRequestHandler):
             return _json_response(self, 200, {"prompts": workflow_store.list_prompts()})
         if path == "/evaluations":
             return _json_response(self, 200, {"evaluations": evaluation_store.list_evaluations()})
+        if path == "/datasets":
+            return _json_response(self, 200, {"datasets": dataset_store.list_datasets()})
+        if path.startswith("/pipeline/releases/"):
+            prompt_id = path.split("/", 3)[3]
+            return _json_response(self, 200, pipeline.assess_release_readiness(prompt_id))
         if path.startswith("/prompts/"):
             prompt_id = path.split("/", 2)[2]
             prompt = workflow_store.get_prompt(prompt_id)
@@ -106,6 +113,31 @@ class Handler(BaseHTTPRequestHandler):
                 return _json_response(self, 400, {"error": "missing_fields", "fields": missing})
             evaluation = evaluation_store.create_evaluation(payload)
             return _json_response(self, 201, {"evaluation": evaluation})
+
+        if path == "/datasets":
+            payload = _read_json(self)
+            missing = _required_fields(payload, ["name", "cases"])
+            if missing:
+                return _json_response(self, 400, {"error": "missing_fields", "fields": missing})
+            try:
+                dataset = dataset_store.create_dataset(payload)
+            except ValueError as error:
+                return _json_response(self, 400, {"error": str(error)})
+            return _json_response(self, 201, {"dataset": dataset})
+
+        if path == "/pipeline/evaluations/run-queued":
+            payload = _read_json(self)
+            limit = payload.get("limit")
+            try:
+                limit_value = int(limit) if limit is not None else None
+            except (TypeError, ValueError):
+                return _json_response(self, 400, {"error": "invalid_limit"})
+            processed = pipeline.run_queued_evaluations(limit_value)
+            return _json_response(self, 200, {"processed": processed, "count": len(processed)})
+
+        if path.startswith("/pipeline/releases/"):
+            prompt_id = path.split("/", 3)[3]
+            return _json_response(self, 200, pipeline.assess_release_readiness(prompt_id))
 
         if path == "/generate":
             payload = _read_json(self)

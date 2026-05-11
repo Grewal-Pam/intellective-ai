@@ -8,7 +8,7 @@ ignore = ["E501"]
 
 [tool.mypy]
 python_version = "3.9"
-files = ["backend"]
+files = ["backend", "ui_helpers.py", "streamlit_app.py"]
 ignore_missing_imports = true
 no_implicit_optional = true
 warn_redundant_casts = true

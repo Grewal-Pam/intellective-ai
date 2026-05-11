@@ -105,3 +105,13 @@ def score_evaluation(base_url: str, evaluation_id: str, actor: str, results: dic
     if note:
         body["note"] = note
     return api_post(base_url, f"/evaluations/{evaluation_id}/score", body)
+
+
+def run_queued_evaluations(base_url: str, limit: int = 10) -> ApiResult:
+    """Run queued evaluations through the pipeline."""
+    return api_post(base_url, "/pipeline/evaluations/run-queued", {"limit": limit})
+
+
+def get_release_readiness(base_url: str, prompt_id: str) -> ApiResult:
+    """Check if a prompt is ready for release."""
+    return api_get(base_url, f"/pipeline/releases/{prompt_id}")

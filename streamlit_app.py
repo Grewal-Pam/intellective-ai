@@ -11,9 +11,11 @@ from ui_helpers import (
     get_evaluations,
     get_metrics,
     get_prompts,
+    get_release_readiness,
     publish_prompt,
     review_prompt,
     run_evaluation,
+    run_queued_evaluations,
     score_evaluation,
     submit_prompt,
 )
@@ -100,6 +102,17 @@ def render_evaluation_runs() -> None:
     left, right = st.columns([2, 1])
 
     with left:
+        st.markdown("### Pipeline Controls")
+        if st.button("▶ Run Queued Evaluations (Pipeline)"):
+            result = run_queued_evaluations(base_url, limit=10)
+            if result.ok:
+                count = result.data.get("evaluations_processed", 0)
+                st.success(f"Pipeline executed: {count} evaluation(s) processed")
+                st.json(result.data)
+            else:
+                st.error(f"Pipeline failed: {result.error}")
+        
+        st.markdown("### All Evaluations")
         for evaluation in evaluations:
             with st.expander(f"Prompt {evaluation.get('prompt_id', '?')} — {evaluation.get('state', 'unknown')}"):
                 st.json(evaluation)
@@ -136,12 +149,43 @@ def render_evaluation_runs() -> None:
 
 def render_release_gate() -> None:
     st.subheader("Release Gate")
-    st.info("This screen will enforce: approved prompt + accepted evaluation + checklist completion.")
+    st.info("Automated gating: approved prompt + accepted evaluation = release ready.")
+    
     prompts = get_prompts(base_url)
-    published = [prompt for prompt in prompts if prompt.get("state") == "published"]
-    st.metric("Published prompts", len(published))
-    st.metric("Total prompts", len(prompts))
-    st.write("Release checklist automation is next; this panel will become the gatekeeper UI.")
+    published = [p for p in prompts if p.get("state") == "published"]
+    
+    col1, col2, col3 = st.columns(3)
+    col1.metric("Published prompts", len(published))
+    col2.metric("Total prompts", len(prompts))
+    col3.metric("Ready for release", "TBD")
+    
+    st.markdown("### Check Release Readiness")
+    if published:
+        prompt_id = st.selectbox(
+            "Select a published prompt",
+            options=published,
+            format_func=lambda p: f"{p.get('name', 'Unnamed')} ({p.get('id', '?')})",
+        )
+        if st.button("Check Readiness"):
+            result = get_release_readiness(base_url, prompt_id.get("id", ""))
+            if result.ok:
+                data = result.data
+                ready = data.get("ready", False)
+                if ready:
+                    st.success("✓ Prompt is ready for production release!")
+                else:
+                    st.warning("⚠ Prompt is not yet ready for release")
+                
+                st.json({
+                    "ready": ready,
+                    "reasons": data.get("reasons", []),
+                    "prompt_state": data.get("prompt_state"),
+                    "accepted_eval_count": data.get("accepted_eval_count", 0),
+                })
+            else:
+                st.error(f"Error checking readiness: {result.error}")
+    else:
+        st.info("No published prompts available. Create and publish a prompt to check release readiness.")
 
 
 def render_runtime_monitor() -> None:

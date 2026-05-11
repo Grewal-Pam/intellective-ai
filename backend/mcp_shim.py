@@ -1,9 +1,7 @@
 from __future__ import annotations
 
 import json
-import os
 from http.server import BaseHTTPRequestHandler, HTTPServer
-from pathlib import Path
 import time
 
 try:

@@ -42,6 +42,12 @@ It will start as a structured prompt store and evolve into a full AI platform wi
 - caching and cost tracking
 - monitoring, tracing, and telemetry
 
+### Phase 4: Product Surface and Automation
+- operator UI for prompt registry, review queue, evaluation runs, release gate, and runtime monitoring
+- automated evaluation runner pipeline (queue -> run -> score)
+- release guard automation that blocks publishing when quality gates fail
+- dashboard views for latency, errors, and provider usage trends
+
 ## Non-Goals for Now
 - building a customer-facing UI before the foundation is ready
 - mixing unrelated app artifacts into the prompt store
@@ -52,3 +58,5 @@ It will start as a structured prompt store and evolve into a full AI platform wi
 - the app can swap model providers with minimal code changes
 - the repo is deployable and observable
 - teams can build on top of it confidently
+- non-engineering stakeholders can operate core prompt workflows through the UI
+- evaluation and release checks can run with minimal manual orchestration

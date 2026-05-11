@@ -8,6 +8,7 @@ This repo is a safe-to-edit enhanced starter derived from your original workspac
 
 Current product direction:
 - [PRODUCT_BRIEF.md](PRODUCT_BRIEF.md) explains the business problem, target users, and phased roadmap.
+- [docs/NEXT_PHASE_PLAN.md](docs/NEXT_PHASE_PLAN.md) defines the next execution milestone (UI screens, data/AI jobs, and automation).
 - [workflows/README.md](workflows/README.md) starts the first operational workflow: prompt approval.
 
 Diagram:

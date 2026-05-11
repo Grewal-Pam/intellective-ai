@@ -30,11 +30,11 @@ jobs:
 
       - name: Run lint checks
         run: |
-          python -m ruff check backend tests
+          python -m ruff check backend tests streamlit_app.py ui_helpers.py
 
       - name: Run type checks
         run: |
-          python -m mypy backend
+          python -m mypy backend ui_helpers.py streamlit_app.py
 
       - name: Run unit tests with coverage
         run: |

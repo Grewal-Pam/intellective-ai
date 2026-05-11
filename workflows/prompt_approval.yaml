@@ -1,0 +1,62 @@
+name: prompt_approval
+version: 1.0.0
+description: Prompt approval lifecycle for intellective-ai
+owner_role: prompt_owner
+trigger: prompt_submitted
+states:
+  - draft
+  - in_review
+  - approved
+  - rejected
+  - published
+roles:
+  - prompt_author
+  - prompt_reviewer
+  - product_owner
+  - admin
+steps:
+  - id: submit
+    from: draft
+    to: in_review
+    actor: prompt_author
+    required_inputs:
+      - prompt_content
+      - use_case
+      - expected_outcome
+      - test_examples
+  - id: review
+    from: in_review
+    to: approved
+    actor: prompt_reviewer
+    checks:
+      - clarity
+      - safety
+      - business_value
+      - test_coverage
+  - id: reject
+    from: in_review
+    to: rejected
+    actor: prompt_reviewer
+    required_inputs:
+      - rejection_reason
+      - suggested_changes
+  - id: revise
+    from: rejected
+    to: draft
+    actor: prompt_author
+  - id: publish
+    from: approved
+    to: published
+    actor: product_owner
+    required_inputs:
+      - version_tag
+      - release_notes
+exit_criteria:
+  - prompt_has_metadata
+  - prompt_has_test_cases
+  - prompt_has_review_approval
+  - prompt_is_versioned
+metrics:
+  - approval_time
+  - rejection_rate
+  - publish_rate

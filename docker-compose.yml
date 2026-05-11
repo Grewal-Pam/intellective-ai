@@ -1,0 +1,14 @@
+services:
+  intellective-ai:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "8000:8000"
+    environment:
+      INTELLECTIVE_AI_HOST: 0.0.0.0
+      INTELLECTIVE_AI_PORT: 8000
+      INTELLECTIVE_AI_DATA_DIR: /app/data
+    volumes:
+      - ./data:/app/data
+    restart: unless-stopped

@@ -1,0 +1,28 @@
+{
+  "title": "Prompt Metadata Schema",
+  "type": "object",
+  "required": ["name", "content", "use_case", "expected_outcome"],
+  "properties": {
+    "name": {"type": "string", "description": "Human-friendly prompt name"},
+    "content": {"type": "string", "description": "Prompt text or instructions"},
+    "use_case": {"type": "string", "description": "Problem or workflow the prompt serves"},
+    "expected_outcome": {"type": "string", "description": "What good output looks like"},
+    "test_examples": {
+      "type": "array",
+      "items": {"type": "object"},
+      "description": "Example inputs and expected outputs"
+    },
+    "version": {"type": "string", "description": "Prompt version tag"},
+    "author": {"type": "string", "description": "Prompt author or owner"},
+    "tags": {
+      "type": "array",
+      "items": {"type": "string"},
+      "description": "Categorization and search tags"
+    },
+    "status": {
+      "type": "string",
+      "enum": ["draft", "in_review", "approved", "rejected", "published"],
+      "description": "Current workflow status"
+    }
+  }
+}

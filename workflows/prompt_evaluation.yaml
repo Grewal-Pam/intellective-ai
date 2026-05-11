@@ -1,0 +1,56 @@
+name: prompt_evaluation
+version: 1.0.0
+description: Prompt evaluation lifecycle for intellective-ai
+owner_role: evaluation_owner
+trigger: prompt_ready_for_testing
+states:
+  - queued
+  - running
+  - scored
+  - needs_revision
+  - accepted
+roles:
+  - prompt_author
+  - prompt_reviewer
+  - evaluation_owner
+  - admin
+steps:
+  - id: queue
+    from: queued
+    to: running
+    actor: evaluation_owner
+    required_inputs:
+      - prompt_id
+      - evaluation_dataset
+      - success_metrics
+  - id: score
+    from: running
+    to: scored
+    actor: evaluation_owner
+    checks:
+      - accuracy
+      - relevance
+      - safety
+      - consistency
+  - id: revise
+    from: scored
+    to: needs_revision
+    actor: prompt_reviewer
+    required_inputs:
+      - failure_reason
+      - improvement_notes
+  - id: accept
+    from: scored
+    to: accepted
+    actor: prompt_reviewer
+    required_inputs:
+      - passing_threshold
+      - result_summary
+exit_criteria:
+  - prompt_has_test_suite
+  - prompt_has_metrics
+  - prompt_meets_thresholds
+metrics:
+  - pass_rate
+  - average_score
+  - failure_types

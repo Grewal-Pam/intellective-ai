@@ -1,0 +1,61 @@
+name: prompt_release_checklist
+version: 1.0.0
+description: Prompt release checklist for intellective-ai
+owner_role: release_owner
+trigger: prompt_ready_for_release
+states:
+  - checklist_pending
+  - checklist_in_progress
+  - ready_for_release
+  - released
+  - blocked
+roles:
+  - prompt_author
+  - prompt_reviewer
+  - product_owner
+  - release_owner
+  - admin
+steps:
+  - id: start_checklist
+    from: checklist_pending
+    to: checklist_in_progress
+    actor: release_owner
+    required_inputs:
+      - prompt_id
+      - release_notes
+      - version_tag
+  - id: verify
+    from: checklist_in_progress
+    to: ready_for_release
+    actor: release_owner
+    checks:
+      - approval_complete
+      - evaluation_passed
+      - metadata_complete
+      - version_tagged
+      - rollback_plan_documented
+  - id: block
+    from: checklist_in_progress
+    to: blocked
+    actor: release_owner
+    required_inputs:
+      - blocking_reason
+      - next_steps
+  - id: release
+    from: ready_for_release
+    to: released
+    actor: product_owner
+    required_inputs:
+      - release_notes
+      - version_tag
+      - release_owner_signoff
+exit_criteria:
+  - prompt_has_approval_record
+  - prompt_has_evaluation_result
+  - prompt_has_version_tag
+  - prompt_has_release_notes
+  - prompt_is_approved_for_publish
+metrics:
+  - release_success_rate
+  - blocked_release_rate
+  - checklist_completion_time

@@ -1,0 +1,48 @@
+{
+  "prompts": [
+    {
+      "id": "82dd7087-3c1b-4592-b989-93c59b5ec0c5",
+      "name": "Support Reply",
+      "content": "Draft a helpful reply",
+      "use_case": "customer support",
+      "expected_outcome": "clear response",
+      "test_examples": [
+        {
+          "input": "Where is my order?",
+          "expected": "polite status update"
+        }
+      ],
+      "state": "published",
+      "version": "0.1.0",
+      "review_notes": [
+        "Looks good",
+        "version=1.0.0"
+      ],
+      "history": [
+        {
+          "event": "created",
+          "state": "draft",
+          "actor": "prompt_author"
+        },
+        {
+          "event": "submit",
+          "state": "in_review",
+          "actor": "prompt_author",
+          "note": null
+        },
+        {
+          "event": "review",
+          "state": "approved",
+          "actor": "prompt_reviewer",
+          "note": "Looks good"
+        },
+        {
+          "event": "publish",
+          "state": "published",
+          "actor": "product_owner",
+          "note": "version=1.0.0"
+        }
+      ]
+    }
+  ]
+}

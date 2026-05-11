@@ -23,23 +23,23 @@ Key interactions:
 ```mermaid
 flowchart LR
   subgraph Author
-    A[create draft \n POST /prompts]
-    B[submit \n POST /prompts/{id}/submit]
+    A["create draft<br>POST /prompts"]
+    B["submit<br>POST /prompts/:id/submit"]
   end
 
   subgraph Review
-    C[review \n POST /prompts/{id}/review]
-    R[rejected \n -> revise]
+    C["review<br>POST /prompts/:id/review"]
+    R["rejected — revise"]
     P[approved]
   end
 
   subgraph Release
-    Pub[publish \n POST /prompts/{id}/publish]
+    Pub["publish<br>POST /prompts/:id/publish"]
   end
 
   subgraph Runtime
-    G[generate \n POST /generate]
-    M[metrics \n GET /metrics]
+    G["generate<br>POST /generate"]
+    M["metrics<br>GET /metrics"]
   end
 
   A --> B --> C
@@ -48,8 +48,6 @@ flowchart LR
   G --> M
 
   P --> Pub
-
-  click A href "/workflow/prompt-approval" "Open workflow spec"
 ```
 
 ## Short narrative

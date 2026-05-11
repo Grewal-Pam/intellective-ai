@@ -1,5 +1,7 @@
 # intellective-ai
 
+[![CI](https://github.com/Grewal-Pam/intellective-ai/actions/workflows/ci.yml/badge.svg?branch=main)](https://github.com/Grewal-Pam/intellective-ai/actions/workflows/ci.yml)
+
 Production-ready scaffold for GenAI, RAG, and prompt engineering.
 
 This repo is a safe-to-edit enhanced starter derived from your original workspace. It includes a structured prompt store area, a simple backend, and a conservative migration helper to import prompts.
